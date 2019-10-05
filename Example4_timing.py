@@ -53,19 +53,24 @@ plt.legend()
 plt.savefig('./img/Example4.eps')
 
 from sklearn.linear_model import LinearRegression as LR
+from sklearn.preprocessing import PolynomialFeatures
 
-clf = LR(fit_intercept=True)
-a =  np.log(time_index.flatten())
+poly = PolynomialFeatures(degree=2)
+X_ = poly.fit_transform(X)
+
+clf = LR()
+a =  time_index.flatten()
 a = a.reshape((a.shape[0],1))
+a = poly.fit_transform(a)
 
 plt.figure()
 plt.scatter(time_index.flatten(), time_Rcut.flatten(), color='b', label="Ratio cut")
-clf.fit(a, np.log(time_Rcut.flatten()))
-plt.plot(time_index.flatten(),np.exp(clf.predict(a)),'b')
+clf.fit(a, time_Rcut.flatten())
+plt.plot(time_index.flatten(),clf.predict(a),'b')
 
 plt.scatter(time_index.flatten(), time_PRcut.flatten(), color='r', label="Power Ratio cut")
-clf.fit(a, np.log(time_PRcut.flatten()))
-plt.plot(time_index.flatten(),np.exp(clf.predict(a)),'r')
+clf.fit(a, time_PRcut.flatten())
+plt.plot(time_index.flatten(),clf.predict(a),'r')
 plt.xlabel('size')
 plt.ylabel('time')
 plt.legend()
